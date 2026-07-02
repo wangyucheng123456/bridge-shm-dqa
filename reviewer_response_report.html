@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reviewer-Response Report — Bridge SHM DQA</title>
+<style>
+:root { --bg:#0f1720; --card:#172230; --ink:#e6edf3; --muted:#9fb0c0;
+         --acc:#4da3ff; --good:#3fb950; --warn:#e3b341; --bad:#f85149; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+        font-family:-apple-system,Segoe UI,Roboto,"Microsoft YaHei",sans-serif;
+        line-height:1.6; }
+.wrap { max-width:1080px; margin:0 auto; padding:32px 20px 80px; }
+h1 { font-size:26px; margin:0 0 4px; }
+h2 { font-size:20px; margin:38px 0 10px; padding-top:14px;
+      border-top:1px solid #24313f; }
+h3 { font-size:16px; color:var(--acc); margin:20px 0 6px; }
+.sub { color:var(--muted); margin:0 0 18px; }
+.card { background:var(--card); border:1px solid #24313f; border-radius:10px;
+         padding:16px 18px; margin:14px 0; }
+.badge { display:inline-block; font-size:12px; padding:2px 9px; border-radius:20px;
+          font-weight:600; margin-right:6px; }
+.b-fixed { background:rgba(63,185,80,.15); color:var(--good);
+            border:1px solid var(--good); }
+.b-warn { background:rgba(227,179,65,.15); color:var(--warn);
+           border:1px solid var(--warn); }
+.b-bad { background:rgba(248,81,73,.15); color:var(--bad);
+          border:1px solid var(--bad); }
+table { border-collapse:collapse; width:100%; font-size:13px; margin:10px 0;
+         overflow:hidden; border-radius:8px; }
+th,td { padding:7px 10px; text-align:center; border-bottom:1px solid #24313f; }
+th { background:#1d2a38; color:var(--muted); font-weight:600;
+      position:sticky; top:0; }
+tbody tr:hover { background:#1b2836; }
+td.hl { color:var(--warn); font-weight:600; }
+.scroll { max-height:520px; overflow:auto; border:1px solid #24313f;
+           border-radius:8px; }
+code { background:#0b1119; padding:1px 6px; border-radius:5px;
+        color:#ffb; font-size:13px; }
+.cb { margin:10px 0; border:1px solid #24313f; border-radius:8px;
+       overflow:hidden; }
+.cb.old { border-color:#5a2a2a; }
+.cb.new { border-color:#2a5a34; }
+.cb pre { margin:0; padding:12px 14px; background:#0b1119; overflow:auto;
+           font-size:12.5px; line-height:1.5; }
+.cb pre code { background:none; color:#d6e2ee; padding:0; }
+.cbtag { font-size:11px; font-weight:700; padding:5px 12px; letter-spacing:.4px;
+          color:var(--muted); background:#141f2b; }
+.cbtag.t-old { color:#f0a; background:rgba(248,81,73,.10); }
+.cbtag.t-new { color:var(--good); background:rgba(63,185,80,.10); }
+.chg { background:#141d28; border:1px solid #24313f; border-radius:10px;
+        padding:14px 18px; margin:16px 0; }
+.chg .loc { font-size:12px; color:var(--muted); margin:0 0 4px; }
+.chg .loc code { color:#8fd; }
+.tag2 { display:inline-block; font-size:11px; padding:1px 8px; border-radius:5px;
+         background:#22303f; color:var(--acc); margin-left:6px; }
+.gloss { width:100%; } .gloss td { text-align:left; }
+.gloss td:first-child { color:var(--acc); font-weight:600; white-space:nowrap;
+                         width:150px; }
+.step { display:flex; gap:12px; margin:10px 0; align-items:flex-start; }
+.step .n { background:var(--acc); color:#04101c; font-weight:700; border-radius:50%;
+            min-width:26px; height:26px; display:flex; align-items:center;
+            justify-content:center; font-size:13px; }
+.step .body { flex:1; }
+.quote { border-left:3px solid var(--acc); padding:8px 14px; margin:10px 0;
+          background:#101a26; color:#cfe; font-style:italic; }
+.kpi { display:flex; gap:14px; flex-wrap:wrap; margin:12px 0; }
+.kpi div { background:#101a26; border:1px solid #24313f; border-radius:8px;
+            padding:12px 16px; flex:1; min-width:180px; }
+.kpi b { display:block; font-size:24px; color:var(--acc); }
+.kpi span { color:var(--muted); font-size:12px; }
+ul { margin:8px 0; } li { margin:3px 0; }
+.small { color:var(--muted); font-size:12px; }
+a { color:var(--acc); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>审稿意见回应 · 新增实验汇总</h1>
+<p class="sub">Bridge SHM 数据质量评估框架 — 在原稿基础上完成的全部新工作<br>
+数据集：Vanersborg · 样本数 510,104 · 窗口 200 ·
+训练截止 idx 227,821 · 断裂 idx 340,032 ·
+运行耗时 1164.5 秒</p>
+
+<div class="card">
+<b>本次共完成 5 项新工作：</b>
+<ul>
+<li>① <b>修复 F1 数据泄露</b>：改用无泄露的"训练集 95 分位固定阈值"，并量化了原优化阈值的乐观偏差。</li>
+<li>② <b>补跑 Wilcoxon 符号秩检验</b>（配对 t 检验并列），并保存全部逐种子原始数组。</li>
+<li>③ <b>新增三个基线</b>：Isolation Forest、One-Class SVM、LSTM 自编码器。</li>
+<li>④ <b>初始化可公开引用的代码仓库</b>（git + README + .gitignore）。</li>
+<li>⑤ <b>窗口标注阈值敏感性</b>：0.2 / 0.3 / 0.4 / 0.5 对照。</li>
+</ul>
+</div>
+
+<h2>① F1 阈值数据泄露：确认 + 修复</h2>
+<p><span class="badge b-bad">问题确认</span> 原稿报告的 F1 是在
+<b>评估数据本身</b>上扫描 ROC 阈值挑出的最大值 —— 这是数据泄露。修复方式是改用
+<b>只在健康训练集上确定的 95 分位固定阈值</b>（<span class="badge b-fixed">无泄露</span>），
+AUC 与阈值无关故不受影响。下表量化了"泄露乐观偏差"（<code>F1_leak_gap</code> =
+泄露F1 − 干净F1）：</p>
+
+<div class="kpi">
+<div><b>+0.633</b><span>最大乐观偏差
+（IsolationForest / baseline）<br>泄露 0.817
+→ 真实 0.185</span></div>
+<div><b>+0.228</b><span>PCA 基线偏差<br>
+泄露 0.752 → 真实 0.524</span></div>
+<div><b>不受影响</b><span>AUC 与阈值无关，<br>原稿所有 AUC 结论依然成立</span></div>
+</div>
+
+<div class="scroll"><table><thead><tr><th>Detector</th><th>Condition</th><th>F1_fixed_clean</th><th>F1_fixed_std</th><th>F1_optimal_leaked</th><th>F1_leak_gap</th><th>AUC</th><th>n_seeds</th></tr></thead><tbody><tr><td>PCA</td><td>baseline</td><td>0.5238</td><td>0.0</td><td>0.7519</td><td class="hl">0.2280</td><td>0.7244</td><td>10</td></tr><tr><td>PCA</td><td>missing_20pct</td><td>0.6958</td><td>0.0087341722084291</td><td>0.7543</td><td class="hl">0.0585</td><td>0.6184</td><td>10</td></tr><tr><td>PCA</td><td>noise_5dB</td><td>0.7519</td><td>0.0</td><td>0.7521</td><td class="hl">0.0002</td><td>0.4985</td><td>10</td></tr><tr><td>PCA</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0</td><td>0.7522</td><td class="hl">0.0003</td><td>0.4981</td><td>10</td></tr><tr><td>PCA</td><td>drift</td><td>0.4223</td><td>0.0129120935497172</td><td>0.7519</td><td class="hl">0.3296</td><td>0.3651</td><td>10</td></tr><tr><td>IsolationForest</td><td>baseline</td><td>0.1847</td><td>0.0108393897901115</td><td>0.8173</td><td class="hl">0.6326</td><td>0.6842</td><td>10</td></tr><tr><td>IsolationForest</td><td>missing_20pct</td><td>0.2103</td><td>0.0124557528935107</td><td>0.8095</td><td class="hl">0.5992</td><td>0.6820</td><td>10</td></tr><tr><td>IsolationForest</td><td>noise_5dB</td><td>0.7519</td><td>0.0</td><td>0.7530</td><td class="hl">0.0012</td><td>0.6258</td><td>10</td></tr><tr><td>IsolationForest</td><td>spikes_0.5pct</td><td>0.7504</td><td>0.0031282092416549</td><td>0.7531</td><td class="hl">0.0026</td><td>0.6138</td><td>10</td></tr><tr><td>IsolationForest</td><td>drift</td><td>0.1808</td><td>0.0104570207891137</td><td>0.7779</td><td class="hl">0.5971</td><td>0.5890</td><td>10</td></tr><tr><td>OneClassSVM</td><td>baseline</td><td>0.7739</td><td>1.1702778228589004e-16</td><td>0.7840</td><td class="hl">0.0101</td><td>0.7447</td><td>10</td></tr><tr><td>OneClassSVM</td><td>missing_20pct</td><td>0.7640</td><td>0.0065829446078191</td><td>0.7806</td><td class="hl">0.0166</td><td>0.7082</td><td>10</td></tr><tr><td>OneClassSVM</td><td>noise_5dB</td><td>0.7519</td><td>0.0</td><td>0.7519</td><td class="hl">0.0000</td><td>0.5000</td><td>10</td></tr><tr><td>OneClassSVM</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0</td><td>0.7521</td><td class="hl">0.0002</td><td>0.5002</td><td>10</td></tr><tr><td>OneClassSVM</td><td>drift</td><td>0.7270</td><td>0.001199502814141</td><td>0.7574</td><td class="hl">0.0303</td><td>0.6491</td><td>10</td></tr><tr><td>DenseAE</td><td>baseline</td><td>0.6418</td><td>0.0459382466395206</td><td>0.8322</td><td class="hl">0.1904</td><td>0.8082</td><td>10</td></tr><tr><td>DenseAE</td><td>missing_20pct</td><td>0.6774</td><td>0.0186798374428612</td><td>0.8081</td><td class="hl">0.1307</td><td>0.7071</td><td>10</td></tr><tr><td>DenseAE</td><td>noise_5dB</td><td>0.7519</td><td>0.0</td><td>0.7521</td><td class="hl">0.0002</td><td>0.4994</td><td>10</td></tr><tr><td>DenseAE</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0</td><td>0.7521</td><td class="hl">0.0002</td><td>0.4994</td><td>10</td></tr><tr><td>DenseAE</td><td>drift</td><td>0.5977</td><td>0.0405033301101094</td><td>0.7584</td><td class="hl">0.1607</td><td>0.6489</td><td>10</td></tr><tr><td>LSTM_AE</td><td>baseline</td><td>0.8006</td><td>0.0501850121271967</td><td>0.8516</td><td class="hl">0.0510</td><td>0.8729</td><td>5</td></tr><tr><td>LSTM_AE</td><td>missing_20pct</td><td>0.8006</td><td>0.0510582437524189</td><td>0.8524</td><td class="hl">0.0517</td><td>0.8712</td><td>5</td></tr><tr><td>LSTM_AE</td><td>noise_5dB</td><td>0.7519</td><td>0.0</td><td>0.7525</td><td class="hl">0.0006</td><td>0.5442</td><td>5</td></tr></tbody></table></div>
+<p class="small">列含义：<code>F1_fixed_clean</code>=无泄露固定阈值 F1（建议报告值）；
+<code>F1_optimal_leaked</code>=原稿的测试集优化 F1（有泄露）；
+<code>F1_leak_gap</code>=两者之差（乐观偏差）。</p>
+
+<h3>建议写进方法节 2.5 的措辞</h3>
+<div class="quote">Each detector is trained on healthy data only. The decision
+threshold is fixed as the 95th percentile of the reconstruction/anomaly-score
+distribution on the training set and applied unchanged to the test segment; no
+test-set information informs threshold selection. We report AUC
+(threshold-independent) together with F1, precision and recall at this fixed,
+training-derived threshold.</div>
+
+<h2>② Wilcoxon 符号秩检验（+ 配对 t 检验）</h2>
+<p><span class="badge b-fixed">已补跑</span> 对每个检测器、每个条件都同时给出配对 t 检验与
+Wilcoxon 符号秩检验的 p 值，并保存了全部逐种子原始数组（<code>results/tables/reviewer_raw/*.npy</code>）以便复现。</p>
+<p><span class="badge b-warn">重要说明</span> 部分检测器（PCA、One-Class SVM）的 baseline
+是<b>确定性</b>的，其多种子值为同一常数，故该配对本质上是"样本 vs 常数"的单样本比较；
+LSTM-AE 仅 5 个种子，Wilcoxon 的最小可达 p 为 0.0625，故即便效应很大也可能不显著（样本量所限）。</p>
+<div class="scroll"><table><thead><tr><th>Detector</th><th>Metric</th><th>Comparison</th><th>baseline_mean</th><th>condition_mean</th><th>n_pairs</th><th>t_p</th><th>wilcoxon_p</th><th>cohens_d</th><th>wilcoxon_note</th></tr></thead><tbody><tr><td>PCA</td><td>F1_fixed</td><td>baseline vs missing_20pct</td><td>0.524</td><td>0.696</td><td>10</td><td>3.6e-13</td><td class="hl">0.0020</td><td>-27.84</td><td>nan</td></tr><tr><td>PCA</td><td>F1_fixed</td><td>baseline vs noise_5dB</td><td>0.524</td><td>0.752</td><td>10</td><td>&lt;1e-300</td><td class="hl">0.0020</td><td>0.00</td><td>nan</td></tr><tr><td>PCA</td><td>F1_fixed</td><td>baseline vs spikes_0.5pct</td><td>0.524</td><td>0.752</td><td>10</td><td>&lt;1e-300</td><td class="hl">0.0020</td><td>0.00</td><td>nan</td></tr><tr><td>PCA</td><td>F1_fixed</td><td>baseline vs drift</td><td>0.524</td><td>0.422</td><td>10</td><td>1.3e-09</td><td class="hl">0.0020</td><td>11.12</td><td>nan</td></tr><tr><td>PCA</td><td>AUC</td><td>baseline vs missing_20pct</td><td>0.724</td><td>0.618</td><td>10</td><td>6.8e-10</td><td class="hl">0.0020</td><td>11.99</td><td>nan</td></tr><tr><td>PCA</td><td>AUC</td><td>baseline vs noise_5dB</td><td>0.724</td><td>0.498</td><td>10</td><td>8.9e-13</td><td class="hl">0.0020</td><td>25.17</td><td>nan</td></tr><tr><td>PCA</td><td>AUC</td><td>baseline vs spikes_0.5pct</td><td>0.724</td><td>0.498</td><td>10</td><td>4.0e-14</td><td class="hl">0.0020</td><td>35.55</td><td>nan</td></tr><tr><td>PCA</td><td>AUC</td><td>baseline vs drift</td><td>0.724</td><td>0.365</td><td>10</td><td>1.4e-11</td><td class="hl">0.0020</td><td>18.46</td><td>nan</td></tr><tr><td>IsolationForest</td><td>F1_fixed</td><td>baseline vs missing_20pct</td><td>0.185</td><td>0.210</td><td>10</td><td>4.1e-06</td><td class="hl">0.0020</td><td>-2.19</td><td>nan</td></tr><tr><td>IsolationForest</td><td>F1_fixed</td><td>baseline vs noise_5dB</td><td>0.185</td><td>0.752</td><td>10</td><td>5.5e-17</td><td class="hl">0.0020</td><td>-73.99</td><td>nan</td></tr><tr><td>IsolationForest</td><td>F1_fixed</td><td>baseline vs spikes_0.5pct</td><td>0.185</td><td>0.750</td><td>10</td><td>9.7e-17</td><td class="hl">0.0020</td><td>-70.91</td><td>nan</td></tr><tr><td>IsolationForest</td><td>F1_fixed</td><td>baseline vs drift</td><td>0.185</td><td>0.181</td><td>10</td><td>4.8e-07</td><td class="hl">0.0020</td><td>0.37</td><td>nan</td></tr><tr><td>IsolationForest</td><td>AUC</td><td>baseline vs missing_20pct</td><td>0.684</td><td>0.682</td><td>10</td><td>0.0513</td><td class="hl">0.0488</td><td>0.27</td><td>nan</td></tr><tr><td>IsolationForest</td><td>AUC</td><td>baseline vs noise_5dB</td><td>0.684</td><td>0.626</td><td>10</td><td>0.0138</td><td class="hl">0.0137</td><td>1.41</td><td>nan</td></tr><tr><td>IsolationForest</td><td>AUC</td><td>baseline vs spikes_0.5pct</td><td>0.684</td><td>0.614</td><td>10</td><td>1.9e-06</td><td class="hl">0.0020</td><td>4.87</td><td>nan</td></tr><tr><td>IsolationForest</td><td>AUC</td><td>baseline vs drift</td><td>0.684</td><td>0.589</td><td>10</td><td>3.5e-06</td><td class="hl">0.0020</td><td>3.84</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>F1_fixed</td><td>baseline vs missing_20pct</td><td>0.774</td><td>0.764</td><td>10</td><td>0.0011</td><td class="hl">0.0020</td><td>2.11</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>F1_fixed</td><td>baseline vs noise_5dB</td><td>0.774</td><td>0.752</td><td>10</td><td>&lt;1e-300</td><td class="hl">0.0020</td><td>265732265436725.03</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>F1_fixed</td><td>baseline vs spikes_0.5pct</td><td>0.774</td><td>0.752</td><td>10</td><td>&lt;1e-300</td><td class="hl">0.0020</td><td>265732265436725.03</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>F1_fixed</td><td>baseline vs drift</td><td>0.774</td><td>0.727</td><td>10</td><td>7.6e-16</td><td class="hl">0.0020</td><td>55.24</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>AUC</td><td>baseline vs missing_20pct</td><td>0.745</td><td>0.708</td><td>10</td><td>4.5e-06</td><td class="hl">0.0020</td><td>4.35</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>AUC</td><td>baseline vs noise_5dB</td><td>0.745</td><td>0.500</td><td>10</td><td>&lt;1e-300</td><td class="hl">0.0020</td><td>2957130100701988.00</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>AUC</td><td>baseline vs spikes_0.5pct</td><td>0.745</td><td>0.500</td><td>10</td><td>4.4e-21</td><td class="hl">0.0020</td><td>210.80</td><td>nan</td></tr><tr><td>OneClassSVM</td><td>AUC</td><td>baseline vs drift</td><td>0.745</td><td>0.649</td><td>10</td><td>3.6e-11</td><td class="hl">0.0020</td><td>16.67</td><td>nan</td></tr><tr><td>DenseAE</td><td>F1_fixed</td><td>baseline vs missing_20pct</td><td>0.642</td><td>0.677</td><td>10</td><td>0.0038</td><td class="hl">0.0020</td><td>-1.02</td><td>nan</td></tr><tr><td>DenseAE</td><td>F1_fixed</td><td>baseline vs noise_5dB</td><td>0.642</td><td>0.752</td><td>10</td><td>3.4e-05</td><td class="hl">0.0020</td><td>-3.39</td><td>nan</td></tr><tr><td>DenseAE</td><td>F1_fixed</td><td>baseline vs spikes_0.5pct</td><td>0.642</td><td>0.752</td><td>10</td><td>3.4e-05</td><td class="hl">0.0020</td><td>-3.39</td><td>nan</td></tr><tr><td>DenseAE</td><td>F1_fixed</td><td>baseline vs drift</td><td>0.642</td><td>0.598</td><td>10</td><td>5.9e-06</td><td class="hl">0.0020</td><td>1.02</td><td>nan</td></tr><tr><td>DenseAE</td><td>AUC</td><td>baseline vs missing_20pct</td><td>0.808</td><td>0.707</td><td>10</td><td>5.8e-10</td><td class="hl">0.0020</td><td>6.65</td><td>nan</td></tr><tr><td>DenseAE</td><td>AUC</td><td>baseline vs noise_5dB</td><td>0.808</td><td>0.499</td><td>10</td><td>3.7e-12</td><td class="hl">0.0020</td><td>26.66</td><td>nan</td></tr><tr><td>DenseAE</td><td>AUC</td><td>baseline vs spikes_0.5pct</td><td>0.808</td><td>0.499</td><td>10</td><td>5.8e-13</td><td class="hl">0.0020</td><td>27.27</td><td>nan</td></tr><tr><td>DenseAE</td><td>AUC</td><td>baseline vs drift</td><td>0.808</td><td>0.649</td><td>10</td><td>8.8e-10</td><td class="hl">0.0020</td><td>8.50</td><td>nan</td></tr><tr><td>LSTM_AE</td><td>F1_fixed</td><td>baseline vs missing_20pct</td><td>0.801</td><td>0.801</td><td>5</td><td>0.9923</td><td class="hl">1.0000</td><td>-0.00</td><td>nan</td></tr><tr><td>LSTM_AE</td><td>F1_fixed</td><td>baseline vs noise_5dB</td><td>0.801</td><td>0.752</td><td>5</td><td>0.0956</td><td class="hl">0.3125</td><td>1.37</td><td>nan</td></tr><tr><td>LSTM_AE</td><td>AUC</td><td>baseline vs missing_20pct</td><td>0.873</td><td>0.871</td><td>5</td><td>0.0435</td><td class="hl">0.0625</td><td>0.14</td><td>nan</td></tr><tr><td>LSTM_AE</td><td>AUC</td><td>baseline vs noise_5dB</td><td>0.873</td><td>0.544</td><td>5</td><td>8.9e-07</td><td class="hl">0.0625</td><td>31.80</td><td>nan</td></tr></tbody></table></div>
+
+<h2>③ 新增基线模型</h2>
+<p><span class="badge b-fixed">已实现并评估</span> 在完全相同的协议下（健康数据训练 +
+95 分位固定阈值），新增 <b>Isolation Forest</b>、<b>One-Class SVM</b>、
+<b>LSTM 自编码器</b>三个基线。下表为无泄露的固定阈值指标（均值 ± 标准差，附 95% bootstrap CI）：</p>
+<div class="scroll"><table><thead><tr><th>Detector</th><th>Condition</th><th>F1 (fixed)</th><th>F1_CI95</th><th>AUC</th><th>AUC_CI95</th><th>Precision</th><th>Recall</th><th>n_seeds</th></tr></thead><tbody><tr><td>PCA</td><td>baseline</td><td>0.5238 ± 0.0000</td><td>[0.5238, 0.5238]</td><td>0.7244 ± 0.0000</td><td>[0.7244, 0.7244]</td><td>0.9072 ± 0.0000</td><td>0.3682 ± 0.0000</td><td>10</td></tr><tr><td>PCA</td><td>missing_20pct</td><td>0.6958 ± 0.0087</td><td>[0.6912, 0.7011]</td><td>0.6184 ± 0.0125</td><td>[0.6109, 0.6256]</td><td>0.7094 ± 0.0083</td><td>0.6828 ± 0.0120</td><td>10</td></tr><tr><td>PCA</td><td>noise_5dB</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.4985 ± 0.0127</td><td>[0.4909, 0.5058]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>PCA</td><td>spikes_0.5pct</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.4981 ± 0.0090</td><td>[0.4931, 0.5034]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>PCA</td><td>drift</td><td>0.4223 ± 0.0129</td><td>[0.4146, 0.4298]</td><td>0.3651 ± 0.0275</td><td>[0.3484, 0.3811]</td><td>0.4963 ± 0.0355</td><td>0.3682 ± 0.0000</td><td>10</td></tr><tr><td>IsolationForest</td><td>baseline</td><td>0.1847 ± 0.0108</td><td>[0.1783, 0.1910]</td><td>0.6842 ± 0.0074</td><td>[0.6800, 0.6888]</td><td>0.7546 ± 0.0187</td><td>0.1053 ± 0.0069</td><td>10</td></tr><tr><td>IsolationForest</td><td>missing_20pct</td><td>0.2103 ± 0.0125</td><td>[0.2033, 0.2177]</td><td>0.6820 ± 0.0088</td><td>[0.6768, 0.6875]</td><td>0.7473 ± 0.0273</td><td>0.1225 ± 0.0083</td><td>10</td></tr><tr><td>IsolationForest</td><td>noise_5dB</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.6258 ± 0.0582</td><td>[0.5912, 0.6589]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>IsolationForest</td><td>spikes_0.5pct</td><td>0.7504 ± 0.0031</td><td>[0.7484, 0.7521]</td><td>0.6138 ± 0.0191</td><td>[0.6017, 0.6242]</td><td>0.6051 ± 0.0022</td><td>0.9875 ± 0.0064</td><td>10</td></tr><tr><td>IsolationForest</td><td>drift</td><td>0.1808 ± 0.0105</td><td>[0.1746, 0.1868]</td><td>0.5890 ± 0.0343</td><td>[0.5699, 0.6098]</td><td>0.6421 ± 0.0245</td><td>0.1053 ± 0.0069</td><td>10</td></tr><tr><td>OneClassSVM</td><td>baseline</td><td>0.7739 ± 0.0000</td><td>[0.7739, 0.7739]</td><td>0.7447 ± 0.0000</td><td>[0.7447, 0.7447]</td><td>0.8302 ± 0.0000</td><td>0.7247 ± 0.0000</td><td>10</td></tr><tr><td>OneClassSVM</td><td>missing_20pct</td><td>0.7640 ± 0.0066</td><td>[0.7602, 0.7678]</td><td>0.7082 ± 0.0119</td><td>[0.7009, 0.7150]</td><td>0.7075 ± 0.0080</td><td>0.8305 ± 0.0094</td><td>10</td></tr><tr><td>OneClassSVM</td><td>noise_5dB</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.5000 ± 0.0000</td><td>[0.5000, 0.5000]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>OneClassSVM</td><td>spikes_0.5pct</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.5002 ± 0.0016</td><td>[0.4991, 0.5011]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>OneClassSVM</td><td>drift</td><td>0.7270 ± 0.0012</td><td>[0.7263, 0.7277]</td><td>0.6491 ± 0.0081</td><td>[0.6444, 0.6537]</td><td>0.7293 ± 0.0024</td><td>0.7247 ± 0.0000</td><td>10</td></tr><tr><td>DenseAE</td><td>baseline</td><td>0.6418 ± 0.0459</td><td>[0.6126, 0.6648]</td><td>0.8082 ± 0.0093</td><td>[0.8025, 0.8135]</td><td>0.9208 ± 0.0093</td><td>0.4942 ± 0.0512</td><td>10</td></tr><tr><td>DenseAE</td><td>missing_20pct</td><td>0.6774 ± 0.0187</td><td>[0.6658, 0.6877]</td><td>0.7071 ± 0.0194</td><td>[0.6949, 0.7180]</td><td>0.7550 ± 0.0112</td><td>0.6146 ± 0.0251</td><td>10</td></tr><tr><td>DenseAE</td><td>noise_5dB</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.4994 ± 0.0135</td><td>[0.4912, 0.5072]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>DenseAE</td><td>spikes_0.5pct</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.4994 ± 0.0130</td><td>[0.4925, 0.5072]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>10</td></tr><tr><td>DenseAE</td><td>drift</td><td>0.5977 ± 0.0405</td><td>[0.5718, 0.6188]</td><td>0.6489 ± 0.0248</td><td>[0.6328, 0.6619]</td><td>0.7624 ± 0.0390</td><td>0.4942 ± 0.0512</td><td>10</td></tr><tr><td>LSTM_AE</td><td>baseline</td><td>0.8006 ± 0.0502</td><td>[0.7626, 0.8386]</td><td>0.8729 ± 0.0122</td><td>[0.8636, 0.8829]</td><td>0.9175 ± 0.0162</td><td>0.7146 ± 0.0845</td><td>5</td></tr><tr><td>LSTM_AE</td><td>missing_20pct</td><td>0.8006 ± 0.0511</td><td>[0.7602, 0.8384]</td><td>0.8712 ± 0.0122</td><td>[0.8619, 0.8805]</td><td>0.9114 ± 0.0109</td><td>0.7181 ± 0.0852</td><td>5</td></tr><tr><td>LSTM_AE</td><td>noise_5dB</td><td>0.7519 ± 0.0000</td><td>[0.7519, 0.7519]</td><td>0.5442 ± 0.0081</td><td>[0.5380, 0.5506]</td><td>0.6024 ± 0.0000</td><td>1.0000 ± 0.0000</td><td>5</td></tr></tbody></table></div>
+<p class="small">观察：在基线（无退化）AUC 上，LSTM-AE（0.873）&gt; 稠密 AE（0.808）&gt;
+One-Class SVM（0.745）≈ PCA（0.724）&gt; Isolation Forest（0.684）。所有检测器在 5 dB
+噪声下 AUC 均塌陷到 ~0.5，与原稿"噪声是最大威胁"的结论一致。</p>
+
+<h2>④ 代码仓库 · Git 到底是什么？为什么审稿人看重？</h2><div class="card"><p><b>一句话：</b>Git 是一个"代码存档与版本管理系统"，GitHub 是把这个存档放到网上、别人可以访问的网站。把论文代码放上 GitHub，等于给出一个<b>任何人都能下载、且永久不变</b>的链接，审稿人可以据此复现你的结果——这正是"可复现性（reproducibility）"，也是高质量期刊越来越硬性的要求。</p><p>你现在 Data Availability 写的是"代码可向作者索取"。审稿人通常不喜欢这句，因为它不可验证、作者失联后就没了。换成一个公开仓库链接（最好再配一个 Zenodo DOI）会显著加分。</p></div><h3>几个名词（够用版）</h3><table class="gloss"><tbody><tr><td>Repository（仓库/repo）</td><td>就是你这个项目文件夹，但带了"历史记录"功能。</td></tr><tr><td>Commit（提交）</td><td>一次"存档快照"。每次 commit 记录下当前所有文件的状态和一句说明。</td></tr><tr><td>Staging（暂存）</td><td>提交前先用 <code>git add</code> 把要存档的文件挑进"暂存区"。</td></tr><tr><td>Branch（分支）</td><td>平行的开发线，默认叫 <code>master</code> 或 <code>main</code>。你现在用不上多分支。</td></tr><tr><td>Remote / origin（远程）</td><td>网上的那份副本（比如 GitHub 上的仓库），<code>origin</code> 是它的默认别名。</td></tr><tr><td>Push（推送）</td><td>把本地的 commit 上传到远程（GitHub）。</td></tr><tr><td>.gitignore</td><td>一个清单，列出"不要纳入仓库"的文件（比如你那 4GB 原始数据、未发表的 Word 手稿）。</td></tr><tr><td>DOI</td><td>数字对象唯一标识符。Zenodo 能给某个版本的仓库发一个 DOI，等于一个永久、可被论文引用的地址。</td></tr></tbody></table><h3>我已经帮你做到哪一步了</h3><div class="card"><ul><li>✅ <code>git init</code>：在项目里建好了本地仓库（多了一个隐藏的 <code>.git</code> 文件夹）。</li><li>✅ 写好 <code>.gitignore</code>：已排除 4GB 原始数据（<code>data/raw/</code>、<code>*.npy</code>、<code>*.zip</code>）和未发表手稿（<code>*.docx</code>、<code>投稿准备/</code>）。</li><li>✅ 写好 <code>README.md</code>：项目说明、数据来源、复现步骤。</li><li>✅ <code>git add</code>：66 个该公开的文件已进入暂存区。</li><li>⛔ <b>还差最后两步（需要你本人操作）</b>：设置你的署名身份 → 首次提交 → 推到 GitHub。我按安全规范不会去改你的 git 身份配置。</li></ul></div><h3>你需要执行的命令（逐条解释）</h3><div class="step"><div class="n">1</div><div class="body"><b>告诉 git 你是谁</b>（会写进每次提交的作者信息，用你的真实姓名和邮箱）：<div class="cb "><pre><code>git config user.name "Hu XXX"
+git config user.email "your_email@example.com"</code></pre></div><span class="small">注：不加 <code>--global</code>，只对本仓库生效。</span></div></div><div class="step"><div class="n">2</div><div class="body"><b>创建第一次提交</b>（把暂存的 66 个文件正式存档）：<div class="cb "><pre><code>git commit -m "Initial public release: DQA framework for bridge SHM"</code></pre></div></div></div><div class="step"><div class="n">3</div><div class="body"><b>在 GitHub 上新建一个空仓库</b>（网页操作）：登录 github.com → 右上角 + → New repository → 填名字（如 <code>bridge-shm-dqa</code>）→ 不要勾选任何 README/.gitignore → Create。建完它会给你一个地址，形如 <code>https://github.com/你的用户名/bridge-shm-dqa.git</code>。</div></div><div class="step"><div class="n">4</div><div class="body"><b>把本地仓库连到 GitHub 并推上去</b>：<div class="cb "><pre><code>git remote add origin https://github.com/你的用户名/bridge-shm-dqa.git
+git push -u origin master</code></pre></div><span class="small">第一次推送可能会让你登录 GitHub（浏览器或 token）。推完刷新网页就能看到代码了。</span></div></div><div class="step"><div class="n">5</div><div class="body"><b>（可选但强烈建议）拿一个可引用的 DOI</b>：到 zenodo.org 用 GitHub 账号登录 → 在 Zenodo 里打开该仓库的开关 → 回 GitHub 给仓库发一个 Release（如 v1.0）→ Zenodo 会自动归档并生成一个 DOI。然后把 Data Availability 改成：<div class="cb "><div class="cbtag">替换后的 Data Availability</div><pre><code>The code supporting this study is openly available at
+https://github.com/你的用户名/bridge-shm-dqa (archived at
+Zenodo, DOI: 10.5281/zenodo.XXXXXXX).</code></pre></div></div></div>
+
+<h2>⑤ 窗口标注阈值敏感性（0.2 / 0.3 / 0.4 / 0.5）</h2>
+<p><span class="badge b-fixed">已补跑</span> 结果显示阈值选择<b>几乎完全不影响</b>结果：
+F1 在四个阈值下完全相同，AUC 差异仅在 1e-6 量级。原因是窗口很少跨越损伤边界
+（每个窗口内损伤样本占比几乎非 0 即 1），因此任意 (0,1) 内阈值给出的窗口标签一致。
+这为原稿"30% 阈值先验固定"提供了强有力的稳健性证据。</p>
+<div class="scroll"><table><thead><tr><th>window_threshold</th><th>Condition</th><th>F1_fixed</th><th>F1_std</th><th>AUC</th><th>AUC_std</th></tr></thead><tbody><tr><td>0.2</td><td>baseline</td><td>0.5238</td><td>0.0000</td><td>0.7244</td><td>1.17e-16</td></tr><tr><td>0.2</td><td>missing_20pct</td><td>0.6958</td><td>0.0087</td><td>0.6184</td><td>1.25e-02</td></tr><tr><td>0.2</td><td>noise_5dB</td><td>0.7519</td><td>0.0000</td><td>0.4985</td><td>1.27e-02</td></tr><tr><td>0.2</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0000</td><td>0.4981</td><td>9.00e-03</td></tr><tr><td>0.2</td><td>drift</td><td>0.4223</td><td>0.0129</td><td>0.3651</td><td>2.75e-02</td></tr><tr><td>0.3</td><td>baseline</td><td>0.5238</td><td>0.0000</td><td>0.7244</td><td>1.17e-16</td></tr><tr><td>0.3</td><td>missing_20pct</td><td>0.6958</td><td>0.0087</td><td>0.6184</td><td>1.25e-02</td></tr><tr><td>0.3</td><td>noise_5dB</td><td>0.7519</td><td>0.0000</td><td>0.4985</td><td>1.27e-02</td></tr><tr><td>0.3</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0000</td><td>0.4981</td><td>9.00e-03</td></tr><tr><td>0.3</td><td>drift</td><td>0.4223</td><td>0.0129</td><td>0.3651</td><td>2.75e-02</td></tr><tr><td>0.4</td><td>baseline</td><td>0.5238</td><td>0.0000</td><td>0.7244</td><td>6.63e-07</td></tr><tr><td>0.4</td><td>missing_20pct</td><td>0.6958</td><td>0.0087</td><td>0.6184</td><td>1.25e-02</td></tr><tr><td>0.4</td><td>noise_5dB</td><td>0.7519</td><td>0.0000</td><td>0.4985</td><td>1.27e-02</td></tr><tr><td>0.4</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0000</td><td>0.4981</td><td>9.00e-03</td></tr><tr><td>0.4</td><td>drift</td><td>0.4223</td><td>0.0129</td><td>0.3651</td><td>2.75e-02</td></tr><tr><td>0.5</td><td>baseline</td><td>0.5238</td><td>0.0000</td><td>0.7244</td><td>6.63e-07</td></tr><tr><td>0.5</td><td>missing_20pct</td><td>0.6958</td><td>0.0087</td><td>0.6184</td><td>1.25e-02</td></tr><tr><td>0.5</td><td>noise_5dB</td><td>0.7519</td><td>0.0000</td><td>0.4985</td><td>1.27e-02</td></tr><tr><td>0.5</td><td>spikes_0.5pct</td><td>0.7519</td><td>0.0000</td><td>0.4981</td><td>9.00e-03</td></tr><tr><td>0.5</td><td>drift</td><td>0.4223</td><td>0.0129</td><td>0.3651</td><td>2.75e-02</td></tr></tbody></table></div>
+
+<h2>代码具体改了什么（逐处说明）</h2><p class="sub">下面按"文件 → 位置 → 改动类型 → 前后对比 → 为什么"逐条列出。共改动 <b>1 个源文件</b>（<code>src/damage_detection.py</code>）并新增 <b>2 个脚本</b>（<code>reviewer_response.py</code>、<code>generate_reviewer_report.py</code>）与 2 个仓库文件。原有主流程 <code>run_experiment_v2.py</code> 未改动。</p><div class="chg"><h3 style="margin-top:0">变更 1 · 新增 3 个基线检测器所需的 sklearn 导入<span class="tag2">新增</span></h3><p class="loc">文件 <code>src/damage_detection.py</code> · 顶部导入区（第 10–13 行）</p><p>为 Isolation Forest 和 One-Class SVM 引入 scikit-learn 的两个类。</p><div class="cb old"><div class="cbtag t-old">修改前 / BEFORE</div><pre><code>from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler</code></pre></div><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>from sklearn.decomposition import PCA
+from sklearn.ensemble import IsolationForest      # 新增
+from sklearn.svm import OneClassSVM                # 新增
+from sklearn.preprocessing import StandardScaler</code></pre></div></div><div class="chg"><h3 style="margin-top:0">变更 2 · 把硬编码的 30% 窗口阈值提取为可配置函数<span class="tag2">重构</span></h3><p class="loc">文件 <code>src/damage_detection.py</code> · 新增模块级函数 <code>make_window_labels()</code>（第 25–41 行）</p><p>原来两个检测器各自把"窗口内损伤样本占比 &gt; <b>0.3</b>"这个阈值<b>写死</b>在方法里，无法做敏感性对照。现在抽成一个独立函数，阈值变成参数 <code>damaged_frac_threshold</code>（默认仍为 0.3，保证向后兼容），这样问题⑤的 0.2/0.3/0.4/0.5 扫描无需改动任何模型。</p><div class="cb old"><div class="cbtag t-old">修改前 / BEFORE</div><pre><code># 原来：写死在 PCADamageDetector.get_window_labels 里
+return np.array([
+    int(np.mean(labels[i*window_size:(i+1)*window_size]) &gt; 0.3)
+    for i in range(n_windows)
+])</code></pre></div><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>def make_window_labels(labels, window_size=500,
+                       damaged_frac_threshold=0.3):
+    """阈值改为参数，检测器无关，可自由扫描。"""
+    n_windows = len(labels) // window_size
+    if n_windows == 0:
+        return np.array([int(np.mean(labels) &gt; 0.5)])
+    return np.array([
+        int(np.mean(labels[i*window_size:(i+1)*window_size])
+            &gt; damaged_frac_threshold)
+        for i in range(n_windows)
+    ])</code></pre></div></div><div class="chg"><h3 style="margin-top:0">变更 3 · 两个原检测器改用统一的窗口标注函数<span class="tag2">重构</span></h3><p class="loc">文件 <code>src/damage_detection.py</code> · <code>PCADamageDetector.get_window_labels</code> 与 <code>AutoencoderDamageDetector.get_window_labels</code></p><p>两处方法体从"复制粘贴的循环"改为调用上面的公共函数，并新增可选阈值参数。行为默认不变，但现在能接收自定义阈值。</p><div class="cb old"><div class="cbtag t-old">修改前 / BEFORE</div><pre><code>def get_window_labels(self, labels, window_size=500):
+    n_windows = len(labels) // window_size
+    if n_windows == 0:
+        return np.array([int(np.mean(labels) &gt; 0.5)])
+    return np.array([
+        int(np.mean(labels[i*window_size:(i+1)*window_size]) &gt; 0.3)
+        for i in range(n_windows)
+    ])</code></pre></div><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>def get_window_labels(self, labels, window_size=500,
+                      damaged_frac_threshold=0.3):
+    return make_window_labels(labels, window_size,
+                              damaged_frac_threshold)</code></pre></div></div><div class="chg"><h3 style="margin-top:0">变更 4 · 新增无泄露的通用异常检测基类<span class="tag2">新增</span></h3><p class="loc">文件 <code>src/damage_detection.py</code> · 新增类 <code>_WindowAnomalyDetector</code></p><p>这是修复"F1 数据泄露"的关键。基类在 <code>fit()</code> 里<b>只用健康训练集</b>的异常分数计算 95 分位作为固定阈值（<code>self.threshold</code>），<code>predict()</code> 直接套用这个阈值——<b>整个过程从不接触测试标签</b>。Isolation Forest / One-Class SVM 都继承它，只需各自实现"怎么建模型""怎么算异常分"。</p><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>def fit(self, healthy_data, window_size=500, percentile=95.0):
+    features = self._prepare_features(healthy_data, window_size)
+    scaled = self.scaler.fit_transform(features)
+    self.model = self._build_model()
+    self.model.fit(scaled)
+    train_scores = self._anomaly_score(scaled)   # 只看训练集
+    self.threshold = np.percentile(train_scores, percentile)
+    return self
+
+def predict(self, data, window_size=500):
+    scaled = self.scaler.transform(self._prepare_features(data, window_size))
+    scores = self._anomaly_score(scaled)
+    return scores, (scores &gt; self.threshold).astype(int)  # 固定阈值</code></pre></div></div><div class="chg"><h3 style="margin-top:0">变更 5 · 新增 3 个具体基线检测器<span class="tag2">新增</span></h3><p class="loc">文件 <code>src/damage_detection.py</code> · 类 <code>IsolationForestDetector</code>、<code>OneClassSVMDetector</code>、<code>LSTMAutoencoderDetector</code></p><p>前两个只需十几行（继承基类）。异常分数的约定统一为"越大越异常"：Isolation Forest 取 <code>-score_samples</code>，One-Class SVM 取 <code>-decision_function</code>。LSTM-AE 把每个窗口下采样成 32 步的序列，用重构误差当异常分数，阈值同样取健康集 95 分位。</p><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>class IsolationForestDetector(_WindowAnomalyDetector):
+    def _build_model(self):
+        return IsolationForest(n_estimators=200,
+                               random_state=self.random_state, n_jobs=-1)
+    def _anomaly_score(self, scaled):
+        return -self.model.score_samples(scaled)   # 越大越异常
+
+class OneClassSVMDetector(_WindowAnomalyDetector):
+    def _build_model(self):
+        return OneClassSVM(kernel="rbf", nu=0.05, gamma="scale")
+    def _anomaly_score(self, scaled):
+        return -self.model.decision_function(scaled)</code></pre></div></div><div class="chg"><h3 style="margin-top:0">变更 6 · 新增实验主脚本 reviewer_response.py<span class="tag2">新增文件</span></h3><p class="loc">新文件 <code>reviewer_response.py</code>（约 300 行）</p><p>这里把五项分析串起来。<b>关键点：F1 泄露的修复就体现在这里</b>——它同时读取<code>evaluate_detection()</code> 返回的两个值：<code>f1_fixed</code>（无泄露、建议上报）与 <code>f1_score</code>（原稿用的、测试集优化过的、有泄露），两者相减即"乐观偏差"。它还调用已有的 <code>paired_test(..., test="wilcoxon")</code> 补跑 Wilcoxon，并把每个种子的原始结果存成 <code>.npy</code> 供复现。</p><div class="cb new"><div class="cbtag t-new">修改后 / AFTER</div><pre><code>r = evaluate_detection(wlabels, preds, scores)
+rec["f1_fixed"].append(r["f1_fixed"])   # 无泄露：训练集固定阈值
+rec["f1_opt"].append(r["f1_score"])     # 原稿：测试集上挑最优阈值（泄露）
+# ... 保存原始数组，供 Wilcoxon 复现
+np.save(f"results/tables/reviewer_raw/{det}__{cond}__f1_fixed.npy", arr)</code></pre></div></div><div class="card" style="border-color:#5a4a22"><b style="color:var(--warn)">⚠ 一个需要你决定的点</b><br>上面的修复是在<b>新脚本</b>里生效的（用于回应审稿人）。原稿主流程 <code>run_experiment_v2.py</code> 目前<b>仍然</b>上报有泄露的 <code>f1_score</code>（例如正文表里的 baseline F1=0.7519）。如果你要让正文主表也换成无泄露口径，需要把主流程里 <code>results.get('f1_score')</code> 改成 <code>results.get('f1_fixed')</code> 并<b>重跑整条管线</b>（含 Z-24，耗时较长）。要做的话告诉我，我来改并重跑。</div>
+
+<h2>产物清单</h2>
+<div class="card">
+<ul>
+<li><code>reviewer_response.py</code> — 新增实验主脚本</li>
+<li><code>src/damage_detection.py</code> — 新增 IsolationForest / OneClassSVM / LSTM-AE
+检测器 + 可配置窗口阈值 + 无泄露固定阈值</li>
+<li><code>results/tables/reviewer_clean_vs_leaked_f1.csv</code></li>
+<li><code>results/tables/reviewer_multibaseline_detection.csv</code></li>
+<li><code>results/tables/reviewer_wilcoxon_tests.csv</code></li>
+<li><code>results/tables/reviewer_window_threshold_sensitivity.csv</code></li>
+<li><code>results/tables/reviewer_raw/*.npy</code> — 逐种子原始结果（Wilcoxon 复现用）</li>
+<li><code>README.md</code>, <code>.gitignore</code> — 仓库发布准备</li>
+</ul>
+</div>
+<p class="small">本报告由 generate_reviewer_report.py 自动生成，所有数字直接读取上述 CSV。</p>
+</div>
+</body>
+</html>

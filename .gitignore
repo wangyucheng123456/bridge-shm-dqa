@@ -1,0 +1,31 @@
+# ---- Large raw/processed datasets (fetched via download scripts) ----
+data/raw/
+data/processed/
+*.npy
+*.zip
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ---- OS / IDE ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ---- Large model checkpoints ----
+models/*.pt
+models/*.pth
+
+# Keep result tables/figures under version control (they are small and are
+# the artefacts referenced by the manuscript), but ignore the multi-GB data.
+
+# ---- Unpublished manuscripts / cover letters (do NOT publish to a code repo) ----
+*.docx
+投稿准备/

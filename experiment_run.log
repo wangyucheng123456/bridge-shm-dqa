@@ -1,0 +1,278 @@
+
+======================================================================
+  DATA AVAILABILITY CHECK
+======================================================================
+  vanersborg: AVAILABLE
+  z24_inputs: AVAILABLE
+  z24_labels: AVAILABLE
+  z24: AVAILABLE
+[INFO] Found files: 0 .mat, 64 .csv, 0 .h5, 0 other
+[INFO] Selected 26 pre-fracture + 14 post-fracture events
+[INFO] Loading 40 CSV files...
+  CSV columns: ['Unnamed: 0', 'ts', 'id', 'ch_1', 'ch_2', 'ch_3', 'ch_4', 'ch_5', 'ch_6', 'ch_7', 'ch_8', 'ch_9', 'ch_10', 'ch_11', 'ch_12', 'ch_13', 'ch_14', 'ch_15', 'ch_16', 'ch_17', 'ch_18', 'ch_19', 'ch_20', 'ch_21', 'ch_22', 'ch_23', 'ch_24', 'ch_25', 'ch_26', 'ch_27', 'ch_28', 'ch_29', 'ch_30', 'fileid', 'event']
+  Rows: 78044
+  Using ch_N format: 30 channels
+[INFO] Vänersborg data assembled:
+  Total samples: 5611138
+  Accelerometers: 5
+  Strain gauges: 16
+  Tiltmeters: 1
+  Events: 40, Fracture at event 26 (idx 3740359)
+
+======================================================================
+  VANERSBORG BRIDGE EXPERIMENTS
+======================================================================
+  Reducing from 22 to 10 sensors for memory
+  Subsampled 5611138 -> 510104 (step=11)
+  Data shape: (510104, 10)
+  Sensors: ['Acc_1', 'Acc_2', 'Acc_3', 'Acc_4', 'Acc_5', 'Strain_1', 'Strain_2', 'Strain_3', 'Strain_4', 'Strain_5']
+  Fracture at idx: 340032
+  Sampling freq: 18.181818181818183 Hz
+  Window size: 200
+  Training samples: 227821
+  Test samples: 282283
+
+--- Phase 1: Baseline Data Quality Assessment ---
+          Completeness  Accuracy  Consistency  SNR (dB)  Composite
+Acc_1              1.0     0.878          1.0    56.637      96.33
+Acc_2              1.0     0.993          1.0    47.920      99.80
+Acc_3              1.0     1.000          1.0    42.496     100.00
+Acc_4              1.0     0.985          1.0    42.317      99.56
+Acc_5              1.0     0.778          1.0    55.158      93.33
+Strain_1           1.0     0.778          1.0    59.458      93.33
+Strain_2           1.0     0.758          1.0    59.027      92.74
+Strain_3           1.0     0.811          1.0    61.586      94.33
+Strain_4           1.0     0.727          1.0    55.693      91.80
+Strain_5           1.0     0.781          1.0    52.883      93.43
+
+--- Phase 2: Creating Degraded Groups ---
+  baseline                       composite: 95.5/100
+  missing_5pct                   composite: 94.2/100
+  missing_10pct                  composite: 93.0/100
+  missing_20pct                  composite: 90.8/100
+  noise_20dB                     composite: 90.8/100
+  noise_10dB                     composite: 85.9/100
+  noise_5dB                      composite: 83.5/100
+  spikes_0.5pct                  composite: 89.8/100
+  drift                          composite: 96.5/100
+  combined_miss10_snr10          composite: 83.1/100
+  combined_miss10_snr5           composite: 80.7/100
+  combined_miss20_snr10          composite: 80.5/100
+  combined_miss20_snr5           composite: 78.1/100
+
+--- Phase 3: Data Repair ---
+  Generated 48 repair combinations
+
+--- Phase 4: Damage Detection with Statistical Significance ---
+  [baseline] Running detection...
+    PCA F1=0.7519, AUC=0.7244
+  [missing_5pct] Running 20-seed detection...
+    PCA F1=0.7528 ± 0.0014, AUC=0.6830 ± 0.0102
+  [missing_10pct] Running 20-seed detection...
+    PCA F1=0.7549 ± 0.0035, AUC=0.6587 ± 0.0088
+  [missing_20pct] Running 20-seed detection...
+    PCA F1=0.7552 ± 0.0030, AUC=0.6212 ± 0.0110
+  [noise_20dB] Running 20-seed detection...
+    PCA F1=0.7522 ± 0.0005, AUC=0.4957 ± 0.0127
+  [noise_10dB] Running 20-seed detection...
+    PCA F1=0.7521 ± 0.0005, AUC=0.4970 ± 0.0128
+  [noise_5dB] Running 20-seed detection...
+    PCA F1=0.7521 ± 0.0005, AUC=0.4972 ± 0.0128
+  [spikes_0.5pct] Running 20-seed detection...
+    PCA F1=0.7522 ± 0.0004, AUC=0.4987 ± 0.0117
+  [drift] Running 20-seed detection...
+    PCA F1=0.7519 ± 0.0000, AUC=0.3657 ± 0.0238
+
+  --- Autoencoder Detection (10 seeds, full matrix) ---
+  [AE baseline] Running 10-seed detection...
+    AE F1=0.8225 ± 0.0100, AUC=0.7986 ± 0.0084
+  [AE missing_5pct] Running 10-seed detection...
+    AE F1=0.8227 ± 0.0104, AUC=0.7820 ± 0.0108
+  [AE missing_10pct] Running 10-seed detection...
+    AE F1=0.8163 ± 0.0118, AUC=0.7550 ± 0.0108
+  [AE missing_20pct] Running 10-seed detection...
+    AE F1=0.8114 ± 0.0180, AUC=0.7081 ± 0.0193
+  [AE noise_20dB] Running 10-seed detection...
+    AE F1=0.7521 ± 0.0002, AUC=0.4966 ± 0.0119
+  [AE noise_10dB] Running 10-seed detection...
+    AE F1=0.7521 ± 0.0002, AUC=0.4990 ± 0.0128
+  [AE noise_5dB] Running 10-seed detection...
+    AE F1=0.7521 ± 0.0003, AUC=0.4985 ± 0.0137
+  [AE spikes_0.5pct] Running 10-seed detection...
+    AE F1=0.7521 ± 0.0003, AUC=0.4988 ± 0.0132
+  [AE drift] Running 10-seed detection...
+    AE F1=0.7553 ± 0.0075, AUC=0.6398 ± 0.0289
+
+--- Phase 5: Repair Method Detection Comparison (multi-seed) ---
+    PCA missing_20pct_linear_interp: F1=0.7541 ± 0.0019, AUC=0.6511 ± 0.0085
+    PCA noise_5dB_linear_interp: F1=0.7521 ± 0.0002, AUC=0.4985 ± 0.0127
+    PCA spikes_0.5pct_linear_interp: F1=0.7522 ± 0.0006, AUC=0.4981 ± 0.0090
+    PCA missing_20pct_cubic_spline: F1=0.7527 ± 0.0007, AUC=0.5121 ± 0.0201
+    PCA noise_5dB_cubic_spline: F1=0.7521 ± 0.0002, AUC=0.4985 ± 0.0127
+    PCA spikes_0.5pct_cubic_spline: F1=0.7522 ± 0.0006, AUC=0.4981 ± 0.0090
+    PCA missing_20pct_moving_average: F1=0.7812 ± 0.0039, AUC=0.7113 ± 0.0032
+    PCA noise_5dB_moving_average: F1=0.7521 ± 0.0005, AUC=0.4957 ± 0.0116
+    PCA spikes_0.5pct_moving_average: F1=0.7522 ± 0.0003, AUC=0.5250 ± 0.0098
+    PCA missing_20pct_wavelet_denoise: F1=0.7546 ± 0.0021, AUC=0.6617 ± 0.0070
+    PCA noise_5dB_wavelet_denoise: F1=0.7521 ± 0.0004, AUC=0.4909 ± 0.0165
+    PCA spikes_0.5pct_wavelet_denoise: F1=0.7522 ± 0.0004, AUC=0.4979 ± 0.0096
+    PCA missing_20pct_median_filter: F1=0.7693 ± 0.0040, AUC=0.7032 ± 0.0041
+    PCA noise_5dB_median_filter: F1=0.7521 ± 0.0003, AUC=0.4967 ± 0.0167
+    PCA spikes_0.5pct_median_filter: F1=0.7679 ± 0.0007, AUC=0.7098 ± 0.0005
+    PCA missing_20pct_comprehensive: F1=0.7606 ± 0.0048, AUC=0.6931 ± 0.0056
+    PCA noise_5dB_comprehensive: F1=0.7521 ± 0.0003, AUC=0.5000 ± 0.0160
+    PCA spikes_0.5pct_comprehensive: F1=0.7894 ± 0.0030, AUC=0.7003 ± 0.0059
+    AE  missing_20pct_moving_average: F1=0.8192 ± 0.0274, AUC=0.7076 ± 0.0277
+    AE  spikes_0.5pct_moving_average: F1=0.7576 ± 0.0054, AUC=0.6477 ± 0.0337
+    AE  missing_20pct_median_filter: F1=0.8057 ± 0.0320, AUC=0.7119 ± 0.0358
+    AE  spikes_0.5pct_median_filter: F1=0.8061 ± 0.0201, AUC=0.7109 ± 0.0212
+    AE  missing_20pct_comprehensive: F1=0.8087 ± 0.0218, AUC=0.7400 ± 0.0149
+    AE  spikes_0.5pct_comprehensive: F1=0.7905 ± 0.0030, AUC=0.7007 ± 0.0080
+
+--- Phase 6: Statistical Significance Tests ---
+  PCA[F1] Baseline vs missing_20pct: p=0.0001, d=-1.530, significant=True
+  PCA[AUC] Baseline vs missing_20pct: p=0.0000, d=13.325, significant=True
+  PCA[F1] Baseline vs noise_5dB: p=0.0266, d=-0.760, significant=True
+  PCA[AUC] Baseline vs noise_5dB: p=0.0000, d=25.002, significant=True
+  PCA[F1] Baseline vs spikes_0.5pct: p=0.0073, d=-0.950, significant=True
+  PCA[AUC] Baseline vs spikes_0.5pct: p=0.0000, d=27.207, significant=True
+  PCA[F1] Baseline vs drift: p=nan, d=0.000, significant=False
+  PCA[AUC] Baseline vs drift: p=0.0000, d=21.279, significant=True
+  AE [F1] Baseline vs missing_20pct: p=0.0885, d=0.762, significant=False
+  AE [AUC] Baseline vs missing_20pct: p=0.0000, d=6.074, significant=True
+  AE [F1] Baseline vs noise_5dB: p=0.0000, d=9.941, significant=True
+  AE [AUC] Baseline vs noise_5dB: p=0.0000, d=26.328, significant=True
+
+--- Phase 7: DQA Weight Sensitivity Analysis ---
+  Entropy weights (data-driven): ('0.0000', '1.0000', '0.0000', '0.0000')
+  Entropy (data-driven): mean composite = 84.88
+  Expert (0.40, 0.30, 0.20, 0.10): mean composite = 95.47
+  Expert (0.30, 0.30, 0.20, 0.20): mean composite = 95.47
+  Expert (0.25, 0.25, 0.25, 0.25): mean composite = 96.22
+  Expert (0.20, 0.40, 0.20, 0.20): mean composite = 93.95
+  Expert (0.20, 0.20, 0.30, 0.30): mean composite = 96.98
+  Mean Spearman rho across schemes = 0.999
+  Mean Kendall tau  across schemes = 0.996
+
+======================================================================
+  SAVING VÄNERSBORG RESULT TABLES (checkpoint)
+======================================================================
+
+======================================================================
+  SAVING RESULTS TABLES
+======================================================================
+  Saved detection_with_ci.csv (with 95% bootstrap CI)
+  Saved ae_detection_with_ci.csv
+
+  Saved repair_matrix.csv (PCA multi-seed + AE subset)
+
+  Saved statistical_tests.csv
+[INFO] Loading Z-24 Bridge dataset from HuggingFace...
+  inputs shape: (1530, 27, 6000)
+  labels shape: (1530,)
+  unique labels: [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16]
+  Scenario distribution: {0: 90, 1: 90, 2: 90, 3: 90, 4: 90, 5: 90, 6: 90, 7: 90, 8: 90, 9: 90, 10: 90, 11: 90, 12: 90, 13: 90, 14: 90, 15: 90, 16: 90}
+[INFO] Z-24 data assembled:
+  Total samples: 3600000
+  Sensors: 27
+  Healthy segments: 90
+  Damaged segments: 510
+  Damage starts at sample index: 540000
+
+======================================================================
+  Z-24 BRIDGE EXPERIMENTS
+======================================================================
+  Data shape: (3600000, 14)
+  Sensors used: 14/27
+  Window size: 500
+  Training samples: 361800
+  Test samples: 3238200
+  Damage idx: 540000
+
+--- Z-24 Baseline DQA ---
+
+--- Z-24 Degradation + Detection ---
+  Baseline: F1=0.9857, AUC=0.9690
+  Z-24 [missing_5pct]: F1=0.9858 ± 0.0002
+  Z-24 [missing_10pct]: F1=0.9857 ± 0.0002
+  Z-24 [missing_20pct]: F1=0.9857 ± 0.0003
+  Z-24 [noise_20dB]: F1=0.9718 ± 0.0000
+  Z-24 [noise_10dB]: F1=0.9717 ± 0.0000
+  Z-24 [noise_5dB]: F1=0.9717 ± 0.0000
+  Z-24 [spikes_0.5pct]: F1=0.9718 ± 0.0000
+  Z-24 [drift]: F1=0.9717 ± 0.0000
+
+--- Z-24 Autoencoder (10 seeds on key conditions) ---
+  Z-24 AE [baseline]: F1=0.9855 ± 0.0005
+  Z-24 AE [missing_20pct]: F1=0.9851 ± 0.0005
+  Z-24 AE [noise_5dB]: F1=0.9717 ± 0.0000
+
+--- Z-24 Repair Experiments ---
+    Z-24 missing_20pct_linear_interp: F1=0.9857
+    Z-24 noise_5dB_linear_interp: F1=0.9717
+    Z-24 missing_20pct_cubic_spline: F1=0.9747
+    Z-24 noise_5dB_cubic_spline: F1=0.9717
+    Z-24 missing_20pct_moving_average: F1=0.9881
+    Z-24 noise_5dB_moving_average: F1=0.9717
+    Z-24 missing_20pct_wavelet_denoise: F1=0.9861
+    Z-24 noise_5dB_wavelet_denoise: F1=0.9717
+    Z-24 missing_20pct_median_filter: F1=0.9861
+    Z-24 noise_5dB_median_filter: F1=0.9717
+    Z-24 missing_20pct_comprehensive: F1=0.9860
+    Z-24 noise_5dB_comprehensive: F1=0.9717
+
+======================================================================
+  SAVING Z-24 RESULT TABLES (checkpoint)
+======================================================================
+
+======================================================================
+  SAVING RESULTS TABLES
+======================================================================
+  Saved detection_with_ci.csv (with 95% bootstrap CI)
+  Saved ae_detection_with_ci.csv
+
+  Saved repair_matrix.csv (PCA multi-seed + AE subset)
+
+  Saved statistical_tests.csv
+
+  Saved z24_detection_with_ci.csv
+  Saved z24_ae_detection_with_ci.csv
+
+======================================================================
+  GENERATING PUBLICATION-QUALITY FIGURES
+======================================================================
+[Fig 1] Missing Data Heatmap...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig1_missing_heatmap.png
+[Fig 2] Time-series Comparison...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig2_timeseries_overlay.png
+[Fig 3] Bridge Quality Map...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig3_bridge_quality_map_baseline.png
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig3b_bridge_quality_map_degraded.png
+[Fig 4] Degradation Curves...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig4a_degradation_f1.png
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig4b_degradation_auc.png
+[Fig 5] ROC Curves...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig5_roc_curves.png
+[Fig 6] Confusion Matrices...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig6_confusion_matrices.png
+[Fig 7] DQA Radar...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig7_dqa_radar.png
+[Fig 8] Quality Boxplots...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig8_quality_boxplot.png
+[Fig 9] Repair Method Comparison...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig9_repair_comparison_f1.png
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig9b_repair_comparison_auc.png
+
+[Fig 10] Z-24 DQA Radar...
+[SAVED] D:\CX\胡-数据质量\project1\results\figures\fig10_z24_dqa_radar.png
+
+======================================================================
+  EXPERIMENT COMPLETE
+======================================================================
+Total execution time: 4507.8 seconds (75.1 min)
+Figures saved to: D:\CX\胡-数据质量\project1\results\figures
+Tables saved to:  D:\CX\胡-数据质量\project1\results\tables
+
+--- KEY FINDINGS ---
+1. 20% missing data: F1 drops -0.4% (0.7519 -> 0.7552 ± 0.0030)
+2. SNR=5dB noise: F1 drops -0.0% (0.7519 -> 0.7521 ± 0.0005)

@@ -1,5 +1,7 @@
 # Data Quality Assessment and Enhancement for Bridge SHM
 
+[![DOI](https://zenodo.org/badge/1287021222.svg)](https://doi.org/10.5281/zenodo.21130764)
+
 Reproducible code for the manuscript *"A Comprehensive Data Quality Assessment
 and Enhancement Framework for Bridge Structural Health Monitoring."*
 
@@ -71,7 +73,10 @@ with fixed-threshold F1, precision and recall.
 ## Citation
 
 If you use this code, please cite the manuscript (details to follow upon
-acceptance) and the two datasets above.
+acceptance), the archived software release, and the two datasets above.
+
+Software archive (all versions): Zenodo, DOI
+[`10.5281/zenodo.21130764`](https://doi.org/10.5281/zenodo.21130764).
 
 ## License
 
